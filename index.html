@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MCI / CSI Engagement Eligibility</title>
+<script src="https://js.zohostatic.com/crm/widgets/zohocrm_widget.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+  --bg:#f0f2f5;--surface:#fff;--surface2:#f8f9fb;
+  --border:#e1e4e9;--border-light:#edf0f4;
+  --text:#111827;--text-2:#4b5563;--text-3:#9ca3af;
+  --accent:#0078d4;--accent-d:#005fa3;--accent-bg:#eff6ff;
+  --green:#166534;--green-bg:#dcfce7;--green-b:#bbf7d0;
+  --red:#991b1b;--red-bg:#fee2e2;--red-b:#fecaca;
+  --amber:#78350f;--amber-bg:#fef3c7;--amber-b:#fde68a;
+  --blue:#1e40af;--blue-bg:#dbeafe;--blue-b:#bfdbfe;
+  --teal:#134e4a;--teal-bg:#ccfbf1;--teal-b:#99f6e4;
+  --violet:#4c1d95;--violet-bg:#ede9fe;--violet-b:#c4b5fd;
+  --r:8px;--r-lg:12px;
+  --sh:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.05);
+  --sh-lg:0 10px 40px rgba(0,0,0,.15);
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13.5px;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* HEADER */
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 1px 0 var(--border)}
+.hdr-icon{width:30px;height:30px;background:linear-gradient(135deg,#0078d4,#005fa3);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hdr-icon svg{color:#fff}
+.hdr-title{font-size:13.5px;font-weight:700;letter-spacing:-.02em}
+.hdr-sub{font-size:11px;color:var(--text-3);margin-top:1px}
+.spacer{flex:1}
+.admin-only{display:none}
+.admin-only.show{display:flex;align-items:center;gap:8px}
+
+/* ADMIN BAR */
+.admin-bar{background:linear-gradient(90deg,#0078d4,#005fa3);color:#fff;padding:8px 20px;display:none;align-items:center;gap:10px;font-size:12px;font-weight:500}
+.admin-bar.show{display:flex}
+
+/* ACCOUNT INFO BAR */
+.account-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.acct-field{display:flex;flex-direction:column;gap:3px;min-width:200px}
+.acct-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3)}
+.acct-value{font-size:13px;font-weight:600;color:var(--text)}
+.acct-input{padding:5px 9px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;min-width:200px}
+.acct-input:focus{border-color:var(--accent)}
+.acct-input:disabled{background:#f9fafb;color:var(--text-2);cursor:not-allowed}
+.acct-locked{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--text)}
+.acct-locked svg{color:var(--text-3);flex-shrink:0}
+.lock-btn{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;font-family:var(--font);font-size:11.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--amber);background:var(--amber-bg);color:var(--amber);transition:all .15s}
+.lock-btn:hover{background:var(--amber);color:#fff}
+.unlock-btn{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;font-family:var(--font);font-size:11.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:#f3f4f6;color:var(--text-2);transition:all .15s}
+.unlock-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:7px;font-family:var(--font);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;border:none;text-decoration:none;white-space:nowrap}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-d);transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,120,212,.3)}
+.btn-outline{background:var(--surface);color:var(--accent);border:1.5px solid var(--accent)}
+.btn-outline:hover{background:var(--accent-bg)}
+.btn-ghost{background:transparent;color:var(--text-2);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-green{background:var(--green);color:#fff;border:none}
+.btn-green:hover{background:#14532d}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-xs{padding:3px 9px;font-size:11px;border-radius:5px}
+
+/* SUMMARY CARDS */
+.summary-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 20px 10px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;box-shadow:var(--sh)}
+.card-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3)}
+.card-value{font-size:22px;font-weight:800;letter-spacing:-.03em;margin-top:2px}
+.cv-total{color:var(--accent)}.cv-eligible{color:var(--green)}.cv-not{color:var(--red)}
+.cv-nominated{color:var(--blue)}.cv-inprogress{color:#d97706}.cv-completed{color:var(--teal)}
+
+/* TOOLBAR */
+.toolbar{padding:0 20px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.search-wrap{position:relative}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text-3);pointer-events:none}
+#searchInput{padding:6px 10px 6px 30px;width:220px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12.5px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s}
+#searchInput:focus{border-color:var(--accent)}
+.pill{padding:5px 13px;border:1px solid var(--border);border-radius:20px;font-size:11.5px;font-weight:500;color:var(--text-2);background:var(--surface);cursor:pointer;transition:all .15s}
+.pill:hover{border-color:var(--accent);color:var(--accent)}
+.pill.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+
+/* TABLE */
+.table-wrap{padding:0 20px 24px}
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+table{width:100%;border-collapse:collapse}
+thead th{padding:9px 12px;text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--text-3);background:var(--surface2);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
+thead th:hover{color:var(--text-2)}
+thead th.sorted{color:var(--accent)}
+thead th .si{margin-left:3px;opacity:.3}
+thead th.sorted .si{opacity:1}
+tbody tr{border-bottom:1px solid var(--border-light);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#fafbfd}
+td{padding:9px 12px;vertical-align:middle}
+.eng-name{font-weight:600;font-size:12.5px;line-height:1.3;color:var(--text)}
+.area-tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;letter-spacing:.03em;white-space:nowrap}
+.tag-mw{background:#dbeafe;color:#1e40af}
+.tag-sec{background:#fce7f3;color:#9d174d}
+.tag-az{background:var(--violet-bg);color:var(--violet)}
+.tag-ba{background:#d1fae5;color:#065f46}
+.tag-csi{background:#fff7ed;color:#c2410c}
+.tag-gen{background:#f3f4f6;color:#374151}
+.type-chip{font-size:10.5px;padding:2px 8px;border-radius:4px;font-weight:600;background:#f3f4f6;color:var(--text-2);border:1px solid var(--border)}
+.val-cell{font-size:12px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums;white-space:nowrap}
+.val-input{width:100px;padding:4px 7px;border:1px solid var(--border);border-radius:5px;font-family:var(--font);font-size:12px;font-weight:600;color:var(--green);background:var(--green-bg);outline:none}
+.val-input:focus{border-color:var(--green)}
+.status-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.s-eligible{background:var(--green-bg);color:var(--green);border:1px solid var(--green-b)}
+.s-not{background:var(--red-bg);color:var(--red);border:1px solid var(--red-b)}
+.s-unset{background:#f3f4f6;color:var(--text-3);border:1px solid #e5e7eb}
+.s-nominated{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-b)}
+.s-inprogress{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-b)}
+.s-completed{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-b)}
+.elig-select{appearance:none;-webkit-appearance:none;border:1px solid var(--border);border-radius:6px;padding:4px 24px 4px 8px;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;transition:all .15s}
+.elig-select.s-eligible{background-color:var(--green-bg);color:var(--green);border-color:var(--green-b)}
+.elig-select.s-not{background-color:var(--red-bg);color:var(--red);border-color:var(--red-b)}
+.elig-select.s-unset{background-color:#f3f4f6;color:var(--text-3)}
+.notes-ta{width:100%;min-width:140px;border:1px solid transparent;border-radius:5px;padding:4px 6px;font-family:var(--font);font-size:12px;color:var(--text-2);background:transparent;outline:none;resize:none;min-height:30px;transition:all .15s}
+.notes-ta:hover{border-color:var(--border);background:var(--bg)}
+.notes-ta:focus{border-color:var(--accent);background:var(--surface);color:var(--text)}
+.notes-ta::placeholder{color:var(--text-3);font-style:italic}
+.action-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-family:var(--font);font-size:11.5px;font-weight:700;cursor:pointer;transition:all .15s;border:1.5px solid;white-space:nowrap}
+.action-nominate{background:var(--accent-bg);color:var(--accent);border-color:var(--accent)}
+.action-nominate:hover{background:var(--accent);color:#fff}
+.action-view{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-b)}
+.action-view:hover{background:var(--amber);color:#fff}
+.action-completed{background:var(--teal-bg);color:var(--teal);border-color:var(--teal-b)}
+.action-completed:hover{background:var(--teal);color:#fff}
+.action-btn:disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+
+/* STATE */
+.state-box{padding:48px 20px;text-align:center}
+.state-box svg{margin-bottom:10px;opacity:.25}
+.state-box p{font-size:13px;color:var(--text-2)}
+.spinner{width:26px;height:26px;margin:0 auto 10px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MODALS */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(3px);padding:20px}
+.overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--sh-lg);width:500px;max-width:100%;max-height:90vh;overflow-y:auto;animation:mIn .2s ease-out}
+.modal-wide{width:640px}
+@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.mhdr{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px}
+.mhdr-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mi-blue{background:var(--accent-bg);color:var(--accent)}
+.mi-green{background:var(--green-bg);color:var(--green)}
+.mi-amber{background:var(--amber-bg);color:var(--amber)}
+.mi-teal{background:var(--teal-bg);color:var(--teal)}
+.mi-violet{background:var(--violet-bg);color:var(--violet)}
+.mhdr-title{font-size:15px;font-weight:700;letter-spacing:-.02em}
+.mhdr-sub{font-size:12px;color:var(--text-2);margin-top:3px}
+.mbody{padding:18px 20px}
+.mftr{padding:12px 20px 16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.mclose{margin-left:auto;background:none;border:none;cursor:pointer;color:var(--text-3);padding:2px;border-radius:4px;transition:color .15s;flex-shrink:0}
+.mclose:hover{color:var(--text)}
+
+/* Group selector */
+.group-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.group-option{border:2px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .2s;text-align:center;background:var(--surface)}
+.group-option:hover{border-color:var(--accent);background:var(--accent-bg);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,120,212,.12)}
+.group-option.selected{border-color:var(--accent);background:var(--accent-bg);box-shadow:0 0 0 3px rgba(0,120,212,.15)}
+.go-icon{font-size:28px;margin-bottom:8px}
+.go-name{font-size:13px;font-weight:700;color:var(--text)}
+.go-sub{font-size:11px;color:var(--text-2);margin-top:3px}
+
+/* Form type */
+.form-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.form-type-card{border:2px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;background:var(--surface);text-align:center}
+.form-type-card:hover{border-color:var(--accent);background:var(--accent-bg);transform:translateY(-1px)}
+.form-type-card.selected{border-color:var(--accent);background:var(--accent-bg)}
+.ft-icon{font-size:24px;margin-bottom:6px}
+.ft-title{font-size:13px;font-weight:700}
+.ft-desc{font-size:11px;color:var(--text-2);margin-top:3px}
+
+/* Checklist */
+.checklist{display:flex;flex-direction:column;gap:10px}
+.check-item{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;transition:all .15s}
+.check-item.done{background:var(--green-bg);border-color:var(--green-b)}
+.check-cb{width:18px;height:18px;border-radius:4px;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s}
+.check-cb.checked{background:var(--green);border-color:var(--green)}
+.check-cb.checked::after{content:'✓';color:#fff;font-size:11px;font-weight:700}
+.check-label{font-size:13px;font-weight:600;flex:1}
+.check-label.done-text{text-decoration:line-through;color:var(--text-3)}
+.date-input,.text-input{width:100%;margin-top:6px;padding:5px 9px;border:1px solid var(--border);border-radius:5px;font-family:var(--font);font-size:12.5px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s}
+.date-input:focus,.text-input:focus{border-color:var(--accent)}
+
+/* Timeline */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:12px;padding-bottom:16px;position:relative}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;z-index:1}
+.tl-done{background:var(--green);color:#fff}
+.tl-current{background:var(--accent);color:#fff;box-shadow:0 0 0 4px var(--accent-bg)}
+.tl-pending{background:#f3f4f6;color:var(--text-3);border:2px solid var(--border)}
+.tl-line{position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--border)}
+.tl-content{flex:1;padding-top:3px}
+.tl-title{font-size:13px;font-weight:700}
+.tl-detail{font-size:11.5px;color:var(--text-2);margin-top:3px}
+
+/* Import area */
+.import-area{width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:12px;color:var(--text);background:var(--surface);outline:none;resize:vertical;min-height:120px;transition:border-color .15s}
+.import-area:focus{border-color:var(--accent)}
+.import-preview{margin-top:12px;max-height:200px;overflow-y:auto}
+.import-row{display:flex;justify-content:space-between;align-items:center;padding:5px 9px;border-radius:5px;font-size:12px;margin-bottom:4px}
+.import-row.match{background:var(--green-bg);color:var(--green)}
+.import-row.no-match{background:var(--red-bg);color:var(--red)}
+
+/* Info rows */
+.info-row{display:flex;flex-direction:column;gap:6px}
+.info-item{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;background:var(--surface2);border-radius:6px;border:1px solid var(--border)}
+.info-label{font-size:11.5px;font-weight:600;color:var(--text-2)}
+.info-value{font-size:12.5px;font-weight:700;color:var(--text)}
+
+/* Section divider */
+.sdiv{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+.sdiv::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Attach */
+.attach-zone{border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .2s}
+.attach-zone:hover{border-color:var(--accent);background:var(--accent-bg)}
+.attach-zone input{display:none}
+.attach-list{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.attach-item{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px}
+.attach-name{flex:1;font-weight:500}
+.attach-rm{background:none;border:none;cursor:pointer;color:var(--text-3);padding:2px;border-radius:3px;transition:color .15s}
+.attach-rm:hover{color:var(--red)}
+
+/* Confirm dialog */
+.confirm-box{background:var(--amber-bg);border:1px solid var(--amber-b);border-radius:10px;padding:16px;margin-top:12px}
+.confirm-box p{font-size:13px;color:var(--amber);margin-bottom:12px;font-weight:500}
+.confirm-box .confirm-btns{display:flex;gap:8px;justify-content:flex-end}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;color:#fff;box-shadow:0 4px 16px rgba(0,0,0,.15);transform:translateY(60px);opacity:0;transition:all .25s;pointer-events:none;z-index:999}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{background:#166534}
+.toast.info{background:var(--accent)}
+.toast.error{background:#991b1b}
+
+/* Admin login modal */
+.login-field{margin-bottom:12px}
+.login-label{font-size:11.5px;font-weight:700;color:var(--text-2);margin-bottom:5px;display:block}
+.login-input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s}
+.login-input:focus{border-color:var(--accent)}
+
+@media(max-width:900px){.summary-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.summary-row{grid-template-columns:repeat(2,1fr)}.group-grid,.form-type-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="hdr-icon">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+    </svg>
+  </div>
+  <div>
+    <div class="hdr-title">MCI / CSI Engagement Eligibility</div>
+    <div class="hdr-sub">Microsoft Partner Center Incentives · FY26</div>
+  </div>
+  <div class="spacer"></div>
+  <!-- Admin controls -->
+  <div class="admin-only" id="adminControls">
+    <button class="btn btn-outline btn-sm" onclick="openImportModal()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+      Mass Import
+    </button>
+    <a class="btn btn-primary btn-sm" href="https://partner.microsoft.com/en-us/dashboard/customers/list" target="_blank">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Partner Center
+    </a>
+  </div>
+  <!-- Login button for non-admins -->
+  <button class="btn btn-ghost btn-sm" id="loginBtn" onclick="openLoginModal()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+    Admin Login
+  </button>
+  <button class="btn btn-ghost btn-sm" id="logoutBtn" style="display:none" onclick="adminLogout()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    Exit Admin
+  </button>
+</div>
+
+<!-- ADMIN BAR -->
+<div class="admin-bar" id="adminBar">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+  Admin Mode — Edit eligibility, values, and notes inline. Use Mass Import to update multiple engagements at once.
+  <div style="flex:1"></div>
+  <button onclick="confirmResetAll()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:#fff;padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    Reset All Eligibility
+  </button>
+</div>
+
+<!-- ACCOUNT INFO BAR -->
+<div class="account-bar" id="accountBar">
+  <!-- Account Name -->
+  <div class="acct-field">
+    <div class="acct-label">Account</div>
+    <div class="acct-value" id="accountNameDisplay">Loading…</div>
+  </div>
+
+  <!-- Account ID (admin only) -->
+  <div class="acct-field admin-only" id="acctIdField" style="display:none">
+    <div class="acct-label">Account ID (CRM)</div>
+    <div class="acct-value" id="accountIdDisplay" style="font-size:11px;color:var(--text-3);font-family:monospace">—</div>
+  </div>
+
+  <!-- Tenant ID -->
+  <div class="acct-field" id="tenantField">
+    <div class="acct-label">Tenant ID</div>
+    <div id="tenantDisplay"></div>
+  </div>
+
+  <!-- Domain -->
+  <div class="acct-field" id="domainField">
+    <div class="acct-label">Domain</div>
+    <div id="domainDisplay"></div>
+  </div>
+
+  <!-- Lock/Save controls -->
+  <div id="lockControls" style="display:none;align-items:flex-end;gap:8px;padding-bottom:2px">
+    <button class="lock-btn" onclick="confirmLockFields()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Lock Fields
+    </button>
+  </div>
+  <div id="adminUnlockControls" style="display:none;align-items:flex-end;gap:8px;padding-bottom:2px">
+    <button class="unlock-btn" onclick="unlockFields()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 1 1 9.9-1"/></svg>
+      Unlock to Edit
+    </button>
+  </div>
+</div>
+
+<!-- SUMMARY CARDS -->
+<div class="summary-row">
+  <div class="card"><div class="card-label">Total</div><div class="card-value cv-total" id="sumTotal">—</div></div>
+  <div class="card"><div class="card-label">Eligible</div><div class="card-value cv-eligible" id="sumEligible">—</div></div>
+  <div class="card"><div class="card-label">Not Eligible</div><div class="card-value cv-not" id="sumNot">—</div></div>
+  <div class="card"><div class="card-label">Nominated</div><div class="card-value cv-nominated" id="sumNominated">—</div></div>
+  <div class="card"><div class="card-label">In Progress</div><div class="card-value cv-inprogress" id="sumInProgress">—</div></div>
+  <div class="card"><div class="card-label">Completed</div><div class="card-value cv-completed" id="sumCompleted">—</div></div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="search-wrap">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="searchInput" placeholder="Search engagements…" oninput="applyFilters()"/>
+  </div>
+  <button class="pill active" onclick="setFilter('all',this)">All</button>
+  <button class="pill" onclick="setFilter('eligible',this)">Eligible</button>
+  <button class="pill" onclick="setFilter('not-eligible',this)">Not Eligible</button>
+  <button class="pill" onclick="setFilter('nominated',this)">Nominated</button>
+  <button class="pill" onclick="setFilter('inprogress',this)">In Progress</button>
+  <button class="pill" onclick="setFilter('completed',this)">Completed</button>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrap">
+  <div class="table-card">
+    <div class="state-box" id="loadingState"><div class="spinner"></div><p>Loading engagements…</p></div>
+    <table id="engTable" style="display:none">
+      <thead>
+        <tr>
+          <th onclick="sortBy('name',this)">Engagement <span class="si">↕</span></th>
+          <th onclick="sortBy('eligibility',this)">Eligibility <span class="si">↕</span></th>
+          <th>Value (USD)</th>
+          <th onclick="sortBy('area',this)">Area <span class="si">↕</span></th>
+          <th onclick="sortBy('type',this)">Type <span class="si">↕</span></th>
+          <th onclick="sortBy('status',this)">Status <span class="si">↕</span></th>
+          <th>Notes</th>
+          <th onclick="sortBy('lastChecked',this)">Last Checked <span class="si">↕</span></th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div class="state-box" id="emptyState" style="display:none">
+      <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <p>No engagements match your filter.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: ADMIN LOGIN ══ -->
+<div class="overlay" id="loginModal">
+  <div class="modal" style="width:400px">
+    <div class="mhdr">
+      <div class="mhdr-icon mi-blue">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div style="flex:1"><div class="mhdr-title">Admin Login</div><div class="mhdr-sub">Enter your credentials to access admin controls</div></div>
+      <button class="mclose" onclick="closeModal('loginModal')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody">
+      <div class="login-field"><label class="login-label">Email</label><input type="email" class="login-input" id="loginEmail" placeholder="admin@example.com"/></div>
+      <div class="login-field"><label class="login-label">Password</label><input type="password" class="login-input" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <div id="loginError" style="display:none;color:var(--red);font-size:12px;margin-top:6px">Incorrect credentials. Please try again.</div>
+    </div>
+    <div class="mftr">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('loginModal')">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="doLogin()">Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: LOCK CONFIRM ══ -->
+<div class="overlay" id="lockConfirmModal">
+  <div class="modal" style="width:420px">
+    <div class="mhdr">
+      <div class="mhdr-icon mi-amber">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div style="flex:1"><div class="mhdr-title">Confirm & Lock Fields</div><div class="mhdr-sub">Please verify your details are correct</div></div>
+    </div>
+    <div class="mbody">
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:14px">Please confirm these details are correct. Once locked, only an admin can make changes.</p>
+      <div class="info-row" id="lockConfirmDetails"></div>
+      <div style="background:var(--amber-bg);border:1px solid var(--amber-b);border-radius:8px;padding:10px 13px;margin-top:14px;font-size:12.5px;color:var(--amber);display:flex;gap:8px">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Are you sure this information is correct? This action will lock the fields.
+      </div>
+    </div>
+    <div class="mftr">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('lockConfirmModal')">Go Back</button>
+      <button class="btn btn-primary btn-sm" onclick="lockFields()">Yes, Lock Fields</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: GROUP SELECTOR ══ -->
+<div class="overlay" id="groupModal">
+  <div class="modal">
+    <div class="mhdr">
+      <div class="mhdr-icon mi-blue">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div style="flex:1"><div class="mhdr-title">Select Delivery Partner</div><div class="mhdr-sub" id="groupModalSub">Choose who will deliver this engagement</div></div>
+      <button class="mclose" onclick="closeModal('groupModal')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;margin-bottom:16px">
+        <div style="font-weight:700;font-size:13.5px" id="groupEngName">—</div>
+        <div style="margin-top:5px;display:flex;gap:7px;flex-wrap:wrap" id="groupEngMeta"></div>
+      </div>
+      <div class="sdiv">Select Group of Companies</div>
+      <div class="group-grid">
+        <div class="group-option" onclick="selectGroup('kzn')"><div class="go-icon">🏢</div><div class="go-name">First Technology Kwa-Zulu Natal</div><div class="go-sub">Internal · Form required</div></div>
+        <div class="group-option" onclick="selectGroup('pol')"><div class="go-icon">🏢</div><div class="go-name">First Technology Polokwane</div><div class="go-sub">Internal · Form required</div></div>
+        <div class="group-option" onclick="selectGroup('bui')"><div class="go-icon">🤝</div><div class="go-name">BUI</div><div class="go-sub">External · No form needed</div></div>
+        <div class="group-option" onclick="selectGroup('fd')"><div class="go-icon">🤝</div><div class="go-name">First Digital</div><div class="go-sub">External · No form needed</div></div>
+      </div>
+    </div>
+    <div class="mftr"><button class="btn btn-ghost btn-sm" onclick="closeModal('groupModal')">Cancel</button></div>
+  </div>
+</div>
+
+<!-- ══ MODAL: FORM TYPE ══ -->
+<div class="overlay" id="formTypeModal">
+  <div class="modal">
+    <div class="mhdr">
+      <div class="mhdr-icon mi-blue">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div style="flex:1"><div class="mhdr-title">Select Nomination Form</div><div class="mhdr-sub" id="formTypeModalSub">Choose the engagement category</div></div>
+      <button class="mclose" onclick="closeModal('formTypeModal')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody">
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:14px">Select the form type. The form will open in a new tab — return here and click <strong>I've Submitted</strong> when done.</p>
+      <div class="form-type-grid">
+        <div class="form-type-card" onclick="openNomForm('mci')"><div class="ft-icon">🚀</div><div class="ft-title">Copilot (MCI)</div><div class="ft-desc">Modern Work, Copilot & AI engagements</div></div>
+        <div class="form-type-card" onclick="openNomForm('csi')"><div class="ft-icon">🛡️</div><div class="ft-title">Security (CSI)</div><div class="ft-desc">Security, Defender & compliance</div></div>
+      </div>
+    </div>
+    <div class="mftr">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('formTypeModal')">Back</button>
+      <button class="btn btn-primary btn-sm" onclick="confirmFormSubmitted()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/></svg>
+        I've Submitted the Form
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: CHECKLIST (In Progress) ══ -->
+<div class="overlay" id="checklistModal">
+  <div class="modal modal-wide">
+    <div class="mhdr">
+      <div class="mhdr-icon mi-amber">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>
+      <div style="flex:1"><div class="mhdr-title">In Progress — Checklist</div><div class="mhdr-sub" id="checklistSub">Complete all items to move to Completed</div></div>
+      <button class="mclose" onclick="closeModal('checklistModal')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody">
+      <!-- Eng card -->
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;margin-bottom:16px">
+        <div style="font-weight:700;font-size:13.5px" id="checklistEngName">—</div>
+        <div style="margin-top:5px;display:flex;gap:7px;flex-wrap:wrap;align-items:center" id="checklistEngMeta"></div>
+      </div>
+      <div class="sdiv">Progress Checklist</div>
+      <div class="checklist">
+        <div class="check-item" id="ci_consent">
+          <div class="check-cb" id="cb_consent" onclick="toggleCheck('consent')"></div>
+          <div style="flex:1"><div class="check-label" id="cl_consent">Customer Consent Received</div></div>
+        </div>
+        <div class="check-item" id="ci_kickoff">
+          <div class="check-cb" id="cb_kickoff"></div>
+          <div style="flex:1">
+            <div class="check-label" id="cl_kickoff">Kick Off Date</div>
+            <input type="date" class="date-input" id="kickoffDate" onchange="onKickoff()"/>
+          </div>
+        </div>
+        <div class="check-item" id="ci_deliverer">
+          <div class="check-cb" id="cb_deliverer"></div>
+          <div style="flex:1">
+            <div class="check-label" id="cl_deliverer">Name of Person Delivering the Workshop</div>
+            <input type="text" class="text-input" id="delivererName" oninput="onDeliverer()" placeholder="Enter full name…"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin claim attach -->
+      <div class="admin-only" id="claimAttachSection" style="margin-top:18px">
+        <div class="sdiv">Claim Confirmation (Admin Only)</div>
+        <div class="attach-zone" onclick="document.getElementById('claimFileInput').click()">
+          <input type="file" id="claimFileInput" accept=".pdf,.eml,.msg,.jpg,.png" onchange="handleClaimFile(event)"/>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 6px;color:var(--text-3);display:block"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div style="font-size:12px;color:var(--text-2)"><strong style="color:var(--accent)">Click to attach</strong> claim confirmation email</div>
+        </div>
+        <div class="attach-list" id="claimAttachList"></div>
+      </div>
+
+      <!-- Complete section -->
+      <div id="completeSection" style="display:none;margin-top:16px">
+        <div style="background:var(--green-bg);border:1px solid var(--green-b);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green);flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div style="flex:1;font-size:13px;color:var(--green);font-weight:600">All items complete! Mark this engagement as Completed.</div>
+          <button class="btn btn-sm btn-green" onclick="markCompleted()">Mark Completed</button>
+        </div>
+      </div>
+    </div>
+    <div class="mftr">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('checklistModal')">Close</button>
+      <button class="btn btn-primary btn-sm" onclick="saveChecklist()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save Progress
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: COMPLETED VIEW ══ -->
+<div class="overlay" id="completedModal">
+  <div class="modal modal-wide">
+    <div class="mhdr">
+      <div class="mhdr-icon mi-teal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div style="flex:1"><div class="mhdr-title">Completed Engagement</div><div class="mhdr-sub" id="completedSub">—</div></div>
+      <button class="mclose" onclick="closeModal('completedModal')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody">
+      <div class="sdiv">Journey Timeline</div>
+      <div class="timeline" id="completedTimeline"></div>
+      <div class="sdiv" style="margin-top:18px">Engagement Details</div>
+      <div class="info-row" id="completedInfo"></div>
+      <div id="completedAttachSection" style="display:none;margin-top:16px">
+        <div class="sdiv">Claim Confirmation</div>
+        <div class="attach-list" id="completedAttachList"></div>
+      </div>
+      <div class="admin-only" id="completedAdminAttach" style="margin-top:12px">
+        <div class="attach-zone" onclick="document.getElementById('completedFileInput').click()" style="padding:14px">
+          <input type="file" id="completedFileInput" accept=".pdf,.eml,.msg,.jpg,.png" onchange="handleCompletedFile(event)"/>
+          <div style="font-size:12px;color:var(--text-2)"><strong style="color:var(--accent)">Attach</strong> claim confirmation email</div>
+        </div>
+      </div>
+    </div>
+    <div class="mftr"><button class="btn btn-ghost btn-sm" onclick="closeModal('completedModal')">Close</button></div>
+  </div>
+</div>
+
+<!-- ══ MODAL: MASS IMPORT ══ -->
+<div class="overlay" id="importModal">
+  <div class="modal modal-wide">
+    <div class="mhdr">
+      <div class="mhdr-icon mi-violet">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+      </div>
+      <div style="flex:1"><div class="mhdr-title">Mass Import Eligibility</div><div class="mhdr-sub">Paste engagement names with their status to update multiple at once</div></div>
+      <button class="mclose" onclick="closeModal('importModal')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody">
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:10px">Paste one engagement per line in this format:<br><code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:12px">Engagement Name, eligible</code> or <code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:12px">Engagement Name, not eligible</code></p>
+      <textarea class="import-area" id="importText" placeholder="Copilot + Agents Immersion Briefing, eligible&#10;Data Security Immersion Briefings, not eligible&#10;Teams Phone Deployment Accelerator (L), eligible" oninput="previewImport()"></textarea>
+      <div class="import-preview" id="importPreview"></div>
+    </div>
+    <div class="mftr">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('importModal')">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="applyImport()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/></svg>
+        Apply Import
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════
+const ADMIN_EMAIL    = 'ftczohoadmin@firsttech.co.za';
+const ADMIN_PASSWORD = 'FirstTech2026!';
+const MCI_FORM_URL   = 'https://forms.zoho.com/PLACEHOLDER_MCI_FORM';
+const CSI_FORM_URL   = 'https://forms.zoho.com/PLACEHOLDER_CSI_FORM';
+
+// ═══════════════════════════════════════════
+// ENGAGEMENTS
+// ═══════════════════════════════════════════
+const ENG_DEFS = [
+  {id:'e1', name:'Converged Communications Immersion Briefing',          area:'Modern Work', type:'Briefing'},
+  {id:'e2', name:'Converged Communications Immersion Briefings',         area:'Modern Work', type:'Briefing'},
+  {id:'e3', name:'Copilot + Agents Immersion Briefing',                  area:'Modern Work', type:'Briefing'},
+  {id:'e4', name:'Secure AI Productivity Immersion Briefing',            area:'Modern Work', type:'Briefing'},
+  {id:'e5', name:'Copilot + Power Deployment Accelerator (L)',           area:'Modern Work', type:'Accelerator'},
+  {id:'e6', name:'Copilot + Power Deployment Accelerator (M)',           area:'Modern Work', type:'Accelerator'},
+  {id:'e7', name:'Copilot + Power Deployment Accelerator (S)',           area:'Modern Work', type:'Accelerator'},
+  {id:'e8', name:'Copilot + Power Deployment Accelerator (XL)',          area:'Modern Work', type:'Accelerator'},
+  {id:'e9', name:'Copilot + Power Deployment Accelerator (XS)',          area:'Modern Work', type:'Accelerator'},
+  {id:'e10',name:'Copilot + Power Deployment Accelerator (XXL)',         area:'Modern Work', type:'Accelerator'},
+  {id:'e11',name:'Copilot + Power Envisioning & POC (M)',                area:'Modern Work', type:'Workshop'},
+  {id:'e12',name:'Copilot + Power Envisioning & POC (S)',                area:'Modern Work', type:'Workshop'},
+  {id:'e13',name:'Copilot + Power Envisioning & POC (XS)',               area:'Modern Work', type:'Workshop'},
+  {id:'e14',name:'Copilot Envisioning & POC (L)',                        area:'Modern Work', type:'Workshop'},
+  {id:'e15',name:'Copilot Envisioning & POC (XL)',                       area:'Modern Work', type:'Workshop'},
+  {id:'e16',name:'Copilot Envisioning & POC (XXL)',                      area:'Modern Work', type:'Workshop'},
+  {id:'e17',name:'Secure AI Productivity Envisioning & POC (L)',         area:'Modern Work', type:'Workshop'},
+  {id:'e18',name:'Secure AI Productivity Envisioning & POC (M)',         area:'Modern Work', type:'Workshop'},
+  {id:'e19',name:'Secure AI Productivity Envisioning & POC (S)',         area:'Modern Work', type:'Workshop'},
+  {id:'e20',name:'Teams Phone Deployment Accelerator (L)',               area:'Modern Work', type:'Accelerator'},
+  {id:'e21',name:'Teams Phone Deployment Accelerator (M)',               area:'Modern Work', type:'Accelerator'},
+  {id:'e22',name:'Teams Phone Envisioning & POC (L)',                    area:'Modern Work', type:'Workshop'},
+  {id:'e23',name:'Teams Phone Envisioning & POC (M)',                    area:'Modern Work', type:'Workshop'},
+  {id:'e24',name:'Cloud Endpoints Envisioning & POC (M)',                area:'Modern Work', type:'Workshop'},
+  {id:'e25',name:'Cloud Endpoints Envisioning & POC (S)',                area:'Modern Work', type:'Workshop'},
+  {id:'e26',name:'Cloud Endpoints Envisioning & POC (XS)',               area:'Modern Work', type:'Workshop'},
+  {id:'e27',name:'SPF GSI - Win Payment - Copilot 60',                   area:'SPF/GSI',     type:'SPF'},
+  {id:'e28',name:'SPF GSI - Win Payment - Security 100',                 area:'SPF/GSI',     type:'SPF'},
+  {id:'e29',name:'SPF GSI - Win Payment - Security 75',                  area:'SPF/GSI',     type:'SPF'},
+  {id:'e30',name:'SPF CSI - Win Payment - Copilot',                      area:'CSI',         type:'CSI'},
+  {id:'e31',name:'SPF CSI - Win Payment - Security',                     area:'CSI',         type:'CSI'},
+  {id:'e32',name:'SPF CSI - Win Submissions - Copilot',                  area:'CSI',         type:'CSI'},
+  {id:'e33',name:'SPF CSI - Win Submissions - Security',                 area:'CSI',         type:'CSI'},
+  {id:'e34',name:'SPF CSI - Security Pre-Sales L',                       area:'CSI',         type:'CSI'},
+  {id:'e35',name:'SPF CSI - Security Pre-Sales M',                       area:'CSI',         type:'CSI'},
+  {id:'e36',name:'SPF CSI - Security Pre-Sales S',                       area:'CSI',         type:'CSI'},
+  {id:'e37',name:'SPF CSI - Security Pre-Sales XL',                      area:'CSI',         type:'CSI'},
+  {id:'e38',name:'CSP SA Data Security Immersion Briefings',             area:'Security',    type:'Briefing'},
+  {id:'e39',name:'CSP SA Threat Protection Immersion Briefings',         area:'Security',    type:'Briefing'},
+  {id:'e40',name:'Data Security Immersion Briefings',                    area:'Security',    type:'Briefing'},
+  {id:'e41',name:'Threat Protection Immersion Briefings',                area:'Security',    type:'Briefing'},
+  {id:'e42',name:'Microsoft Defender for Cloud Accelerator',             area:'Security',    type:'Accelerator'},
+  {id:'e43',name:'Microsoft Sentinel Accelerator',                       area:'Security',    type:'Accelerator'},
+  {id:'e44',name:'EA Security Cloud Security Envisioning Workshop',      area:'Security',    type:'Workshop'},
+  {id:'e45',name:'EA Security Data Security Envisioning Workshop',       area:'Security',    type:'Workshop'},
+  {id:'e46',name:'EA Security Modern Secops Envisioning Workshop',       area:'Security',    type:'Workshop'},
+  {id:'e47',name:'EA Security MXDR Envisioning Workshop',                area:'Security',    type:'Workshop'},
+  {id:'e48',name:'EA Security Partner Proposal',                         area:'Security',    type:'Other'},
+  {id:'e49',name:'EA Security Threat Protection Envisioning Workshop',   area:'Security',    type:'Workshop'},
+  {id:'e50',name:'Cloud Security Envisioning Workshop',                  area:'Security',    type:'Workshop'},
+  {id:'e51',name:'Data Security Envisioning Workshop',                   area:'Security',    type:'Workshop'},
+  {id:'e52',name:'Modern Secops Envisioning Workshop',                   area:'Security',    type:'Workshop'},
+  {id:'e53',name:'Threat Protection Envisioning Workshop',               area:'Security',    type:'Workshop'},
+  {id:'e54',name:'Microsoft Sentinel Migrate & Modernize (Large)',       area:'Security',    type:'Accelerator'},
+  {id:'e55',name:'Microsoft Sentinel Migrate & Modernize (Medium)',      area:'Security',    type:'Accelerator'},
+  {id:'e56',name:'CSP Accelerator: Defender & Purview Deployment L',     area:'CSP',         type:'Accelerator'},
+  {id:'e57',name:'CSP Accelerator: Defender & Purview Deployment M',     area:'CSP',         type:'Accelerator'},
+  {id:'e58',name:'CSP Accelerator: Defender & Purview Deployment S',     area:'CSP',         type:'Accelerator'},
+  {id:'e59',name:'CSP Accelerator: Defender & Purview Deployment XL',    area:'CSP',         type:'Accelerator'},
+  {id:'e60',name:'CSP Accelerator: Defender & Purview Deployment BP',    area:'CSP',         type:'Accelerator'},
+  {id:'e61',name:'CSP Deployment Accelerator for ME3/ME5 (L)',           area:'CSP',         type:'Accelerator'},
+  {id:'e62',name:'CSP Deployment Accelerator for ME3/ME5 (M)',           area:'CSP',         type:'Accelerator'},
+  {id:'e63',name:'CSP Deployment Accelerator for ME3/ME5 (S)',           area:'CSP',         type:'Accelerator'},
+  {id:'e64',name:'CSP Deployment Accelerator for ME3/ME5 (XL)',          area:'CSP',         type:'Accelerator'},
+];
+
+function areaTag(a){
+  if(!a)return'tag-gen';
+  const l=a.toLowerCase();
+  if(l.includes('modern work'))return'tag-mw';
+  if(l.includes('security'))return'tag-sec';
+  if(l.includes('azure'))return'tag-az';
+  if(l.includes('business')||l.includes('csp')||l.includes('csi')||l.includes('spf'))return'tag-csi';
+  return'tag-gen';
+}
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let rows=[], activeFilter='all', sortCol='name', sortDir=1;
+let isAdmin=false, currentEng=null, selectedGroup=null;
+let accountName='', accountId='';
+let tenantId='', domain='', fieldsLocked=false;
+let crmRecordMap={}, crmReady=false;
+
+// ═══════════════════════════════════════════
+// INIT — uses Zoho SDK when available
+// ═══════════════════════════════════════════
+function init(){
+  if(typeof ZOHO !== 'undefined' && ZOHO.embeddedApp){
+    ZOHO.embeddedApp.on('PageLoad', function(data){
+      accountId   = (data.EntityId && data.EntityId[0]) || '';
+      accountName = data.Entity || 'Unknown Account';
+      crmReady    = true;
+      document.getElementById('accountNameDisplay').textContent = accountName;
+      const idEl = document.getElementById('accountIdDisplay');
+      if(idEl) idEl.textContent = accountId || '—';
+      ZOHO.CRM.CONFIG.getCurrentUser().then(function(resp){
+        const u = resp && resp.users && resp.users[0];
+        const email = (u && u.email) || '';
+        if(email.toLowerCase()===ADMIN_EMAIL.toLowerCase()) activateAdmin();
+        loadFromCRM();
+      }).catch(function(){ loadFromCRM(); });
+    });
+    ZOHO.embeddedApp.init();
+  } else {
+    // Demo / direct browser fallback
+    const p=new URLSearchParams(window.location.search);
+    accountId   = p.get('accountId')   || 'DEMO';
+    accountName = decodeURIComponent(p.get('accountName') || 'Demo Account');
+    const email = p.get('email') || '';
+    document.getElementById('accountNameDisplay').textContent = accountName;
+    const idEl = document.getElementById('accountIdDisplay');
+    if(idEl) idEl.textContent = accountId;
+    if(email.toLowerCase()===ADMIN_EMAIL.toLowerCase()) activateAdmin();
+    loadFromLocalStorage();
+    renderAccountBar();
+    loadEngagements();
+  }
+}
+
+// ═══════════════════════════════════════════
+// CRM DATA LAYER
+// ═══════════════════════════════════════════
+function loadFromCRM(){
+  if(!accountId){ loadFromLocalStorage(); renderAccountBar(); loadEngagements(); return; }
+  ZOHO.CRM.API.searchRecord({
+    Entity:'MCI_CSI_Engagements', Type:'criteria',
+    Query:'(Account_Name:equals:'+accountId+')'
+  }).then(function(resp){
+    if(resp && resp.data && resp.data.length>0){
+      crmRecordMap={};
+      const crmRows={};
+      resp.data.forEach(function(rec){
+        const name=rec.Engagement_Name||'';
+        if(!name) return;
+        crmRecordMap[name]=rec.id;
+        crmRows[name]={
+          eligibility:   rec.Eligibility||'unset',
+          value:         rec.Engagement_Value!=null?String(rec.Engagement_Value):'',
+          status:        rec.Status||'unset',
+          notes:         rec.Notes||'',
+          lastChecked:   rec.Last_Checked||'',
+          nominatedDate: rec.Nominated_Date||'',
+          group:         rec.Group||'',
+          formType:      rec.Form_Type||'',
+          consentDone:   rec.Consent_Done===true||rec.Consent_Done==='true',
+          kickoffDate:   rec.Kickoff_Date||'',
+          delivererName: rec.Deliverer_Name||'',
+          completedDate: rec.Completed_Date||'',
+          claimFiles:    [],
+          tenantId_f:    rec.Tenant_ID||'',
+          domain_f:      rec.Domain||'',
+          fieldsLocked_f:rec.Fields_Locked===true||rec.Fields_Locked==='true',
+        };
+      });
+      const first=Object.values(crmRows)[0];
+      if(first){tenantId=first.tenantId_f;domain=first.domain_f;fieldsLocked=first.fieldsLocked_f;}
+      rows=ENG_DEFS.map(function(e){
+        const s=crmRows[e.name]||{};
+        return Object.assign({},e,{
+          areaTag:areaTag(e.area),
+          eligibility:s.eligibility||'unset', value:s.value||'',
+          status:s.status||'unset', notes:s.notes||'',
+          lastChecked:s.lastChecked||'', nominatedDate:s.nominatedDate||'',
+          group:s.group||'', formType:s.formType||'',
+          consentDone:s.consentDone||false, kickoffDate:s.kickoffDate||'',
+          delivererName:s.delivererName||'', completedDate:s.completedDate||'',
+          claimFiles:[],
+        });
+      });
+    } else {
+      rows=ENG_DEFS.map(function(e){return Object.assign({},e,{
+        areaTag:areaTag(e.area),eligibility:'unset',value:'',status:'unset',
+        notes:'',lastChecked:'',nominatedDate:'',group:'',formType:'',
+        consentDone:false,kickoffDate:'',delivererName:'',completedDate:'',claimFiles:[],
+      });});
+      bulkInsertCRM();
+    }
+    renderAccountBar();
+    showTable();
+    document.getElementById('loadingState').style.display='none';
+  }).catch(function(err){
+    console.warn('[MCI] CRM load failed, using localStorage:',err);
+    loadFromLocalStorage(); renderAccountBar(); loadEngagements();
+  });
+}
+
+function buildCRMPayload(row){
+  return {
+    Name:(accountName||'')+' – '+(row.name||''),
+    Account_Name:{id:accountId},
+    Engagement_Name:row.name||'',
+    Area:row.area||'', Type:row.type||'',
+    Eligibility:row.eligibility||'unset',
+    Engagement_Value:row.value?(parseFloat(row.value)||null):null,
+    Status:row.status||'unset', Notes:row.notes||'',
+    Last_Checked:row.lastChecked||null,
+    Nominated_Date:row.nominatedDate||null,
+    Group:row.group||'', Form_Type:row.formType||'',
+    Consent_Done:row.consentDone||false,
+    Kickoff_Date:row.kickoffDate||null,
+    Deliverer_Name:row.delivererName||'',
+    Completed_Date:row.completedDate||null,
+    Tenant_ID:tenantId||'', Domain:domain||'',
+    Fields_Locked:fieldsLocked||false,
+  };
+}
+
+function bulkInsertCRM(){
+  if(!crmReady||!accountId) return;
+  rows.forEach(function(row){
+    ZOHO.CRM.API.insertRecord({
+      Entity:'MCI_CSI_Engagements', APIData:buildCRMPayload(row), Trigger:[]
+    }).then(function(r){
+      if(r&&r.data&&r.data[0]&&r.data[0].details&&r.data[0].details.id)
+        crmRecordMap[row.name]=r.data[0].details.id;
+    }).catch(function(){});
+  });
+}
+
+function crmSaveRow(rowIndex){
+  if(!crmReady||!accountId){saveToLocalStorage();return;}
+  const row=rows[rowIndex]; if(!row) return;
+  const existingId=crmRecordMap[row.name];
+  const payload=buildCRMPayload(row);
+  if(existingId){
+    payload.id=existingId;
+    ZOHO.CRM.API.updateRecord({Entity:'MCI_CSI_Engagements',APIData:payload,Trigger:[]})
+      .catch(function(){saveToLocalStorage();});
+  } else {
+    ZOHO.CRM.API.insertRecord({Entity:'MCI_CSI_Engagements',APIData:payload,Trigger:[]})
+      .then(function(r){
+        if(r&&r.data&&r.data[0]&&r.data[0].details&&r.data[0].details.id)
+          crmRecordMap[row.name]=r.data[0].details.id;
+      }).catch(function(){saveToLocalStorage();});
+  }
+}
+
+// ═══════════════════════════════════════════
+// LOCAL STORAGE FALLBACK
+// ═══════════════════════════════════════════
+function loadFromLocalStorage(){
+  const key='mci_'+(accountId||'demo');
+  try{
+    const saved=JSON.parse(localStorage.getItem(key)||'{}');
+    tenantId=saved.tenantId||''; domain=saved.domain||''; fieldsLocked=saved.fieldsLocked||false;
+    if(saved.rows) rows=saved.rows;
+  }catch(e){}
+}
+
+function saveToLocalStorage(){
+  const key='mci_'+(accountId||'demo');
+  try{localStorage.setItem(key,JSON.stringify({tenantId,domain,fieldsLocked,rows}));}catch(e){}
+}
+
+function saveState(rowIndex){
+  if(crmReady&&accountId){
+    if(rowIndex!==undefined) crmSaveRow(rowIndex);
+    else rows.forEach(function(_,i){crmSaveRow(i);});
+  } else {
+    saveToLocalStorage();
+  }
+}
+
+// ═══════════════════════════════════════════
+// RESET ALL (admin only)
+// ═══════════════════════════════════════════
+function confirmResetAll(){
+  if(!confirm('Reset ALL eligibility and status for this account to "Not Set"?\n\nThis cannot be undone.')) return;
+  rows.forEach(function(row){
+    row.eligibility='unset'; row.status='unset';
+    row.lastChecked=''; row.notes='';
+  });
+  saveState();
+  showTable();
+  showToast('All eligibility reset to Not Set.','info');
+}
+
+function loadEngagements(){
+  if(rows.length===0){
+    rows = ENG_DEFS.map(e=>({
+      ...e, areaTag:areaTag(e.area),
+      eligibility:'unset', value:'', status:'unset',
+      notes:'', lastChecked:'',
+      nominatedDate:'', group:'', formType:'',
+      consentDone:false, kickoffDate:'', delivererName:'',
+      completedDate:'', claimFiles:[],
+    }));
+  }
+  showTable();
+}
+
+function showTable(){
+  document.getElementById('loadingState').style.display='none';
+  document.getElementById('engTable').style.display='table';
+  renderTable();
+  updateSummary();
+}
+
+// ═══════════════════════════════════════════
+// ACCOUNT BAR
+// ═══════════════════════════════════════════
+function renderAccountBar(){
+  // Tenant ID
+  const td = document.getElementById('tenantDisplay');
+  if(fieldsLocked){
+    td.innerHTML = `<div class="acct-locked"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>${esc(tenantId)||'—'}</div>`;
+  } else {
+    td.innerHTML = `<input type="text" class="acct-input" id="tenantInput" value="${esc(tenantId)}" placeholder="Enter Tenant ID…" oninput="tenantId=this.value;checkLockReady()"/>`;
+  }
+
+  // Domain
+  const dd = document.getElementById('domainDisplay');
+  if(fieldsLocked){
+    dd.innerHTML = `<div class="acct-locked"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>${esc(domain)||'—'}</div>`;
+  } else {
+    dd.innerHTML = `<input type="text" class="acct-input" id="domainInput" value="${esc(domain)}" placeholder="Enter domain…" oninput="domain=this.value;checkLockReady()"/>`;
+  }
+
+  // Lock/unlock controls
+  const lc  = document.getElementById('lockControls');
+  const auc = document.getElementById('adminUnlockControls');
+
+  if(fieldsLocked){
+    lc.style.display='none';
+    auc.style.display = isAdmin ? 'flex' : 'none';
+  } else {
+    lc.style.display = (tenantId||domain) ? 'flex' : 'none';
+    auc.style.display='none';
+  }
+}
+
+function checkLockReady(){
+  const lc = document.getElementById('lockControls');
+  lc.style.display = (tenantId||domain) ? 'flex' : 'none';
+}
+
+function confirmLockFields(){
+  document.getElementById('lockConfirmDetails').innerHTML = `
+    <div class="info-item"><span class="info-label">Account</span><span class="info-value">${esc(accountName)}</span></div>
+    <div class="info-item"><span class="info-label">Tenant ID</span><span class="info-value">${esc(tenantId)||'—'}</span></div>
+    <div class="info-item"><span class="info-label">Domain</span><span class="info-value">${esc(domain)||'—'}</span></div>
+  `;
+  openModal('lockConfirmModal');
+}
+
+function lockFields(){
+  fieldsLocked=true;
+  saveState();
+  closeModal('lockConfirmModal');
+  renderAccountBar();
+  showToast('Fields locked successfully.','success');
+}
+
+function unlockFields(){
+  fieldsLocked=false;
+  saveState();
+  renderAccountBar();
+  showToast('Fields unlocked for editing.','info');
+}
+
+// ═══════════════════════════════════════════
+// ADMIN LOGIN
+// ═══════════════════════════════════════════
+function openLoginModal(){
+  document.getElementById('loginEmail').value='';
+  document.getElementById('loginPassword').value='';
+  document.getElementById('loginError').style.display='none';
+  openModal('loginModal');
+}
+
+function doLogin(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPassword').value;
+  if(email.toLowerCase()===ADMIN_EMAIL.toLowerCase() && pass===ADMIN_PASSWORD){
+    closeModal('loginModal');
+    activateAdmin();
+    showToast('Admin mode activated.','success');
+  } else {
+    document.getElementById('loginError').style.display='block';
+  }
+}
+
+function activateAdmin(){
+  isAdmin=true;
+  document.getElementById('adminControls').classList.add('show');
+  document.getElementById('adminBar').classList.add('show');
+  document.querySelectorAll('.admin-only').forEach(el=>el.classList.add('show'));
+  const acctIdField = document.getElementById('acctIdField');
+  if(acctIdField) acctIdField.style.display='flex';
+  document.getElementById('loginBtn').style.display='none';
+  document.getElementById('logoutBtn').style.display='';
+  renderAccountBar();
+  renderTable();
+}
+
+function adminLogout(){
+  isAdmin=false;
+  document.getElementById('adminControls').classList.remove('show');
+  document.getElementById('adminBar').classList.remove('show');
+  document.querySelectorAll('.admin-only').forEach(el=>el.classList.remove('show'));
+  const acctIdField = document.getElementById('acctIdField');
+  if(acctIdField) acctIdField.style.display='none';
+  document.getElementById('loginBtn').style.display='';
+  document.getElementById('logoutBtn').style.display='none';
+  renderAccountBar();
+  renderTable();
+  showToast('Exited admin mode.','info');
+}
+
+// ═══════════════════════════════════════════
+// RENDER TABLE
+// ═══════════════════════════════════════════
+function renderTable(){
+  const tbody=document.getElementById('tableBody');
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  tbody.innerHTML='';
+
+  const sorted=[...rows].sort((a,b)=>{
+    const va=(a[sortCol]||'').toString();
+    const vb=(b[sortCol]||'').toString();
+    return va<vb?-sortDir:va>vb?sortDir:0;
+  });
+
+  let visible=0;
+  sorted.forEach(row=>{
+    const ri=rows.indexOf(row);
+    const mf =
+      activeFilter==='all'||
+      (activeFilter==='eligible'     && row.eligibility==='eligible')||
+      (activeFilter==='not-eligible' && row.eligibility==='not-eligible')||
+      (activeFilter==='nominated'    && row.status==='nominated')||
+      (activeFilter==='inprogress'   && row.status==='inprogress')||
+      (activeFilter==='completed'    && row.status==='completed');
+    const ms=!q||row.name.toLowerCase().includes(q)||row.area.toLowerCase().includes(q)||row.type.toLowerCase().includes(q);
+    if(!mf||!ms)return;
+    visible++;
+
+    // Eligibility cell
+    const eligCell = isAdmin
+      ? `<select class="elig-select ${eligClass(row.eligibility)}" onchange="onEligChange(${ri},this)">
+           <option value="unset"        ${row.eligibility==='unset'       ?'selected':''}>— Not Set</option>
+           <option value="eligible"     ${row.eligibility==='eligible'    ?'selected':''}>✓ Eligible</option>
+           <option value="not-eligible" ${row.eligibility==='not-eligible'?'selected':''}>✕ Not Eligible</option>
+         </select>`
+      : `<span class="status-badge ${eligClass(row.eligibility)}">${eligLabel(row.eligibility)}</span>`;
+
+    // Value cell
+    const valCell = isAdmin
+      ? `<input type="text" class="val-input" value="${esc(row.value)}" placeholder="0.00" onchange="rows[${ri}].value=this.value;saveState(${ri})"/>`
+      : `<span class="val-cell">${row.value?'$'+Number(row.value).toLocaleString():'—'}</span>`;
+
+    // Notes
+    const notesCell=`<textarea class="notes-ta" placeholder="Add notes…" onchange="rows[${ri}].notes=this.value;saveState(${ri})">${esc(row.notes)}</textarea>`;
+
+    // Action button
+    let actionBtn='';
+    if(row.status==='completed'){
+      actionBtn=`<button class="action-btn action-completed" onclick="openCompleted(${ri})">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>View</button>`;
+    } else if(row.status==='inprogress'){
+      actionBtn=`<button class="action-btn action-view" onclick="openChecklist(${ri})">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Checklist</button>`;
+    } else if(row.status==='nominated'){
+      actionBtn=`<button class="action-btn" style="background:#f0f4f8;color:var(--text-3);border-color:var(--border)" disabled>📋 Nominated</button>`;
+    } else if(row.eligibility==='eligible'){
+      actionBtn=`<button class="action-btn action-nominate" onclick="openGroupModal(${ri})">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>Nominate</button>`;
+    } else {
+      actionBtn=`<button class="action-btn" style="background:#f3f4f6;color:var(--text-3);border-color:#e5e7eb;font-size:11px" disabled>Not Eligible</button>`;
+    }
+
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><div class="eng-name">${esc(row.name)}</div></td>
+      <td>${eligCell}</td>
+      <td>${valCell}</td>
+      <td><span class="area-tag ${row.areaTag}">${esc(row.area)}</span></td>
+      <td><span class="type-chip">${esc(row.type)}</span></td>
+      <td><span class="status-badge ${statusClass(row.status)}">${statusLabel(row.status)}</span></td>
+      <td>${notesCell}</td>
+      <td style="font-size:11px;color:var(--text-3);white-space:nowrap">${fmtDate(row.lastChecked)}</td>
+      <td>${actionBtn}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('emptyState').style.display=visible===0?'block':'none';
+}
+
+function onEligChange(ri,sel){
+  rows[ri].eligibility=sel.value;
+  rows[ri].lastChecked=new Date().toISOString().split('T')[0];
+  sel.className='elig-select '+eligClass(sel.value);
+  saveState();
+  updateSummary();
+  renderTable();
+}
+
+function updateSummary(){
+  document.getElementById('sumTotal').textContent    = rows.length;
+  document.getElementById('sumEligible').textContent = rows.filter(r=>r.eligibility==='eligible').length;
+  document.getElementById('sumNot').textContent      = rows.filter(r=>r.eligibility==='not-eligible').length;
+  document.getElementById('sumNominated').textContent= rows.filter(r=>r.status==='nominated').length;
+  document.getElementById('sumInProgress').textContent=rows.filter(r=>r.status==='inprogress').length;
+  document.getElementById('sumCompleted').textContent= rows.filter(r=>r.status==='completed').length;
+}
+
+// ═══════════════════════════════════════════
+// GROUP MODAL
+// ═══════════════════════════════════════════
+function openGroupModal(ri){
+  currentEng=rows[ri];
+  selectedGroup=null;
+  document.getElementById('groupEngName').textContent=currentEng.name;
+  document.getElementById('groupEngMeta').innerHTML=
+    `<span class="area-tag ${currentEng.areaTag}">${currentEng.area}</span>
+     <span class="type-chip">${currentEng.type}</span>`;
+  document.getElementById('groupModalSub').textContent=`Nominating for ${accountName||'this account'}`;
+  document.querySelectorAll('.group-option').forEach(el=>el.classList.remove('selected'));
+  openModal('groupModal');
+}
+
+function selectGroup(g){
+  selectedGroup=g;
+  document.querySelectorAll('.group-option').forEach((el,i)=>{
+    const gmap=['kzn','pol','bui','fd'];
+    if(gmap[i]===g)el.classList.add('selected');else el.classList.remove('selected');
+  });
+  setTimeout(()=>{
+    closeModal('groupModal');
+    if(g==='kzn'||g==='pol'){
+      const gname=g==='kzn'?'First Technology Kwa-Zulu Natal':'First Technology Polokwane';
+      document.getElementById('formTypeModalSub').textContent=`Delivery: ${gname}`;
+      openModal('formTypeModal');
+    } else {
+      const gname=g==='bui'?'BUI':'First Digital';
+      moveToInProgress(gname);
+    }
+  },300);
+}
+
+// ═══════════════════════════════════════════
+// FORM TYPE MODAL
+// ═══════════════════════════════════════════
+function openNomForm(type){
+  const url=new URL(type==='mci'?MCI_FORM_URL:CSI_FORM_URL);
+  url.searchParams.set('Account_Name',accountName);
+  url.searchParams.set('Account_ID',accountId);
+  url.searchParams.set('Engagement',currentEng.name);
+  window.open(url.toString(),'_blank');
+  showToast('Form opened in new tab — return here after submitting.','info');
+}
+
+function confirmFormSubmitted(){
+  const gname=selectedGroup==='kzn'?'First Technology Kwa-Zulu Natal':'First Technology Polokwane';
+  closeModal('formTypeModal');
+  moveToInProgress(gname);
+}
+
+// ═══════════════════════════════════════════
+// MOVE TO IN PROGRESS  ← THIS IS THE FIX
+// ═══════════════════════════════════════════
+function moveToInProgress(groupName){
+  if(!currentEng)return;
+  const ri=rows.indexOf(currentEng);
+  rows[ri].status='inprogress';
+  rows[ri].group=groupName;
+  rows[ri].nominatedDate=new Date().toISOString().split('T')[0];
+  saveState();
+  renderTable();
+  updateSummary();
+  showToast(`${currentEng.name} is now In Progress.`,'success');
+  // Open checklist immediately
+  setTimeout(()=>openChecklist(ri),350);
+}
+
+// ═══════════════════════════════════════════
+// CHECKLIST MODAL
+// ═══════════════════════════════════════════
+function openChecklist(ri){
+  currentEng=rows[ri];
+  document.getElementById('checklistEngName').textContent=currentEng.name;
+  document.getElementById('checklistEngMeta').innerHTML=
+    `<span class="area-tag ${currentEng.areaTag}">${currentEng.area}</span>
+     <span class="type-chip">${currentEng.type}</span>
+     <span style="font-size:11.5px;color:var(--text-2)">Delivery: <strong>${currentEng.group||'—'}</strong></span>`;
+  document.getElementById('checklistSub').textContent=accountName||'Complete all items to progress';
+
+  setCheck('consent',  currentEng.consentDone);
+  setCheck('kickoff',  !!currentEng.kickoffDate);
+  setCheck('deliverer',!!currentEng.delivererName);
+  document.getElementById('kickoffDate').value   = currentEng.kickoffDate   || '';
+  document.getElementById('delivererName').value = currentEng.delivererName || '';
+
+  const cas=document.getElementById('claimAttachSection');
+  if(isAdmin)cas.classList.add('show');else cas.classList.remove('show');
+
+  renderClaimList();
+  checkComplete();
+  openModal('checklistModal');
+}
+
+function toggleCheck(key){
+  if(key==='consent'){
+    currentEng.consentDone=!currentEng.consentDone;
+    setCheck('consent',currentEng.consentDone);
+  }
+  checkComplete();
+}
+
+function onKickoff(){
+  currentEng.kickoffDate=document.getElementById('kickoffDate').value;
+  setCheck('kickoff',!!currentEng.kickoffDate);
+  checkComplete();
+}
+
+function onDeliverer(){
+  currentEng.delivererName=document.getElementById('delivererName').value.trim();
+  setCheck('deliverer',!!currentEng.delivererName);
+  checkComplete();
+}
+
+function setCheck(key,done){
+  const cb=document.getElementById('cb_'+key);
+  const ci=document.getElementById('ci_'+key);
+  const cl=document.getElementById('cl_'+key);
+  if(!cb)return;
+  if(done){cb.classList.add('checked');ci.classList.add('done');if(cl)cl.classList.add('done-text');}
+  else{cb.classList.remove('checked');ci.classList.remove('done');if(cl)cl.classList.remove('done-text');}
+}
+
+function checkComplete(){
+  const all=currentEng&&currentEng.consentDone&&!!currentEng.kickoffDate&&!!currentEng.delivererName;
+  document.getElementById('completeSection').style.display=all?'block':'none';
+}
+
+function saveChecklist(){
+  if(!currentEng)return;
+  const ri=rows.indexOf(currentEng);
+  rows[ri].consentDone  =currentEng.consentDone;
+  rows[ri].kickoffDate  =currentEng.kickoffDate;
+  rows[ri].delivererName=currentEng.delivererName;
+  saveState();
+  renderTable();
+  updateSummary();
+  showToast('Progress saved.','success');
+}
+
+function markCompleted(){
+  if(!currentEng)return;
+  const ri=rows.indexOf(currentEng);
+  rows[ri].status='completed';
+  rows[ri].completedDate=new Date().toISOString().split('T')[0];
+  rows[ri].consentDone  =currentEng.consentDone;
+  rows[ri].kickoffDate  =currentEng.kickoffDate;
+  rows[ri].delivererName=currentEng.delivererName;
+  saveState();
+  closeModal('checklistModal');
+  renderTable();
+  updateSummary();
+  showToast('Engagement marked Completed!','success');
+  setTimeout(()=>openCompleted(ri),350);
+}
+
+function handleClaimFile(e){
+  const f=e.target.files[0];
+  if(!f||!currentEng)return;
+  currentEng.claimFiles=currentEng.claimFiles||[];
+  currentEng.claimFiles.push(f.name);
+  renderClaimList();
+  showToast('Attachment added.','success');
+}
+
+function renderClaimList(){
+  const list=document.getElementById('claimAttachList');
+  if(!list)return;
+  list.innerHTML=(currentEng.claimFiles||[]).map((f,i)=>`
+    <div class="attach-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+      <span class="attach-name">${esc(f)}</span>
+      <button class="attach-rm" onclick="removeClaimFile(${i})">✕</button>
+    </div>`).join('');
+}
+
+function removeClaimFile(i){if(currentEng){currentEng.claimFiles.splice(i,1);renderClaimList();}}
+
+// ═══════════════════════════════════════════
+// COMPLETED MODAL
+// ═══════════════════════════════════════════
+function openCompleted(ri){
+  const row=rows[ri];
+  currentEng=row;
+  document.getElementById('completedSub').textContent=row.name;
+
+  // Timeline
+  const stages=[
+    {label:'Nominated',   date:row.nominatedDate,  detail:`Delivered by ${row.group||'—'}`},
+    {label:'In Progress', date:row.kickoffDate,    detail:`Deliverer: ${row.delivererName||'—'}`},
+    {label:'Completed',   date:row.completedDate,  detail:'Claim submitted'},
+  ];
+  document.getElementById('completedTimeline').innerHTML=stages.map((s,i)=>{
+    const isDone=i<2||(i===2&&row.status==='completed');
+    const isCurr=i===2&&row.status!=='completed';
+    const dotClass=isDone?'tl-done':isCurr?'tl-current':'tl-pending';
+    const isLast=i===stages.length-1;
+    return`<div class="tl-item">
+      ${!isLast?'<div class="tl-line"></div>':''}
+      <div class="tl-dot ${dotClass}">${isDone?'✓':i+1}</div>
+      <div class="tl-content">
+        <div class="tl-title">${s.label}</div>
+        <div class="tl-detail">${s.date?fmtDate(s.date):'—'} · ${s.detail}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Info
+  document.getElementById('completedInfo').innerHTML=`
+    <div class="info-item"><span class="info-label">Engagement</span><span class="info-value">${esc(row.name)}</span></div>
+    <div class="info-item"><span class="info-label">Area</span><span class="info-value">${esc(row.area)}</span></div>
+    <div class="info-item"><span class="info-label">Delivery Partner</span><span class="info-value">${esc(row.group)||'—'}</span></div>
+    <div class="info-item"><span class="info-label">Customer Consent</span><span class="info-value">${row.consentDone?'✓ Received':'Pending'}</span></div>
+    <div class="info-item"><span class="info-label">Kick Off Date</span><span class="info-value">${fmtDate(row.kickoffDate)||'—'}</span></div>
+    <div class="info-item"><span class="info-label">Workshop Deliverer</span><span class="info-value">${esc(row.delivererName)||'—'}</span></div>
+    <div class="info-item"><span class="info-label">Completed</span><span class="info-value">${fmtDate(row.completedDate)||'—'}</span></div>`;
+
+  // Attachments
+  const as=document.getElementById('completedAttachSection');
+  const al=document.getElementById('completedAttachList');
+  if(row.claimFiles&&row.claimFiles.length>0){
+    as.style.display='block';
+    al.innerHTML=row.claimFiles.map(f=>`
+      <div class="attach-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        <span class="attach-name">${esc(f)}</span>
+      </div>`).join('');
+  } else {
+    as.style.display='none';
+  }
+
+  const caa=document.getElementById('completedAdminAttach');
+  if(isAdmin)caa.classList.add('show');else caa.classList.remove('show');
+
+  openModal('completedModal');
+}
+
+function handleCompletedFile(e){
+  const f=e.target.files[0];
+  if(!f||!currentEng)return;
+  currentEng.claimFiles=currentEng.claimFiles||[];
+  currentEng.claimFiles.push(f.name);
+  const ri=rows.indexOf(currentEng);
+  rows[ri].claimFiles=currentEng.claimFiles;
+  saveState();
+  openCompleted(ri);
+  showToast('Claim confirmation attached.','success');
+}
+
+// ═══════════════════════════════════════════
+// MASS IMPORT
+// ═══════════════════════════════════════════
+function openImportModal(){
+  document.getElementById('importText').value='';
+  document.getElementById('importPreview').innerHTML='';
+  openModal('importModal');
+}
+
+function previewImport(){
+  const lines=document.getElementById('importText').value.split('\n').filter(l=>l.trim());
+  let html='';
+  lines.forEach(line=>{
+    const parts=line.split(',');
+    if(parts.length<2){html+=`<div class="import-row no-match">⚠ "${esc(line.trim())}" — invalid format</div>`;return;}
+    const name=parts[0].trim();
+    const status=parts.slice(1).join(',').trim().toLowerCase();
+    const match=rows.find(r=>r.name.toLowerCase()===name.toLowerCase());
+    const isElig=status.includes('not')?'not-eligible':'eligible';
+    if(match){
+      html+=`<div class="import-row match">✓ "${esc(name)}" → ${isElig==='eligible'?'Eligible':'Not Eligible'}</div>`;
+    } else {
+      html+=`<div class="import-row no-match">✕ "${esc(name)}" — no match found</div>`;
+    }
+  });
+  document.getElementById('importPreview').innerHTML=html;
+}
+
+function applyImport(){
+  const lines=document.getElementById('importText').value.split('\n').filter(l=>l.trim());
+  let count=0;
+  lines.forEach(line=>{
+    const parts=line.split(',');
+    if(parts.length<2)return;
+    const name=parts[0].trim();
+    const status=parts.slice(1).join(',').trim().toLowerCase();
+    const ri=rows.findIndex(r=>r.name.toLowerCase()===name.toLowerCase());
+    if(ri>=0){
+      rows[ri].eligibility=status.includes('not')?'not-eligible':'eligible';
+      rows[ri].lastChecked=new Date().toISOString().split('T')[0];
+      count++;
+    }
+  });
+  saveState();
+  closeModal('importModal');
+  renderTable();
+  updateSummary();
+  showToast(`${count} engagement${count!==1?'s':''} updated.`,count>0?'success':'error');
+}
+
+// ═══════════════════════════════════════════
+// FILTER / SORT / SEARCH
+// ═══════════════════════════════════════════
+function setFilter(f,btn){
+  activeFilter=f;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function applyFilters(){renderTable();}
+
+function sortBy(col,th){
+  if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=1;}
+  document.querySelectorAll('thead th').forEach(t=>t.classList.remove('sorted'));
+  th.classList.add('sorted');
+  renderTable();
+}
+
+// ═══════════════════════════════════════════
+// MODAL HELPERS
+// ═══════════════════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+function eligClass(e){return{eligible:'s-eligible','not-eligible':'s-not',unset:'s-unset'}[e]||'s-unset';}
+function eligLabel(e){return{eligible:'✓ Eligible','not-eligible':'✕ Not Eligible',unset:'— Not Set'}[e]||'—';}
+function statusClass(s){return{eligible:'s-eligible','not-eligible':'s-not',nominated:'s-nominated',inprogress:'s-inprogress',completed:'s-completed',unset:'s-unset'}[s]||'s-unset';}
+function statusLabel(s){return{eligible:'✓ Eligible','not-eligible':'✕ Not Eligible',nominated:'📋 Nominated',inprogress:'⚙️ In Progress',completed:'✅ Completed',unset:'— Not Set'}[s]||'—';}
+function fmtDate(d){if(!d)return'—';try{return new Date(d).toLocaleDateString('en-ZA',{day:'2-digit',month:'short',year:'numeric'});}catch{return d;}}
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function showToast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'info');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+init();
+</script>
+</body>
+</html>
